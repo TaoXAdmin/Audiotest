@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Recognition</title>
+    <style>
+        #output {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            padding: 10px;
+            background-color: lightyellow;
+            border: 1px solid #ccc;
+            font-size: 20px;
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+    <div id="output">Listening...</div>
+    <script>
+        !function(){
+            var output = document.getElementById('output');
+            var l = new (window.SpeechRecognition || window.webkitSpeechRecognition);
+
+            l.lang = "en-US";
+            l.continuous = true;
+
+            l.onstart = function() {
+                console.log("Speech recognition started at: " + new Date().toLocaleTimeString());
+            };
+
+            l.onresult = function(n) {
+                var l = n.results.length - 1;
+                var C = n.results[l][0].transcript;
+
+                console.log("Heard: " + C);
+
+                // Update the output div with the new transcript
+                output.innerText = C;
+            };
+
+            l.onend = function() {
+                console.log("Speech recognition ended, restarting...");
+                l.start();
+            };
+
+            l.start();
+        }();
+    </script>
+</body>
+</html>
